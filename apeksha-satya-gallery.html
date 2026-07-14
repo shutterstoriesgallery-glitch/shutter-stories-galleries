@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apeksha & Satya — Shutter Stories</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0B1E3D;
+    --navy-deep:#071426;
+    --gold:#C9A227;
+    --gold-soft:#E8D9A8;
+    --cream:#F8F6F1;
+    --charcoal:#20201D;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:var(--navy-deep);
+    color:var(--cream);
+    font-family:'Poppins',sans-serif;
+    font-weight:300;
+    overflow-x:hidden;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100svh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:6vh 6vw;
+    position:relative;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(201,162,39,0.08), transparent 60%),
+      linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+  }
+  .eyebrow{
+    font-family:'Poppins',sans-serif;
+    letter-spacing:0.35em;
+    text-transform:uppercase;
+    font-size:0.68rem;
+    color:var(--gold-soft);
+    opacity:0.85;
+    margin-bottom:1.6rem;
+    animation:fadeUp 1s ease both;
+  }
+  .names{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:500;
+    font-size:clamp(2.6rem, 8vw, 5.2rem);
+    line-height:1.05;
+    color:var(--cream);
+    animation:fadeUp 1s ease 0.15s both;
+  }
+  .names em{
+    font-style:italic;
+    color:var(--gold);
+    font-weight:400;
+  }
+  .thread{
+    width:1px;
+    height:56px;
+    background:linear-gradient(180deg, transparent, var(--gold), transparent);
+    margin:2.2rem 0;
+    animation:fadeUp 1s ease 0.3s both;
+  }
+  .occasion{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:clamp(1.1rem, 2.2vw, 1.5rem);
+    color:var(--gold-soft);
+    animation:fadeUp 1s ease 0.4s both;
+  }
+  .date-loc{
+    margin-top:0.8rem;
+    font-size:0.82rem;
+    letter-spacing:0.08em;
+    color:rgba(248,246,241,0.55);
+    animation:fadeUp 1s ease 0.5s both;
+  }
+  .scroll-cue{
+    position:absolute;
+    bottom:5vh;
+    font-size:0.68rem;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:rgba(248,246,241,0.4);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:0.6rem;
+    animation:fadeUp 1s ease 0.7s both;
+  }
+  .scroll-cue::after{
+    content:'';
+    width:1px;
+    height:28px;
+    background:rgba(248,246,241,0.3);
+    animation:pulse 2s ease-in-out infinite;
+  }
+  @keyframes fadeUp{
+    from{opacity:0; transform:translateY(16px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  @keyframes pulse{
+    0%,100%{opacity:0.3;}
+    50%{opacity:0.9;}
+  }
+
+  /* ---------- GALLERY ---------- */
+  .gallery-section{
+    padding:5vh 5vw 10vh;
+    max-width:1400px;
+    margin:0 auto;
+  }
+  .gallery-header{
+    text-align:center;
+    margin-bottom:4rem;
+  }
+  .gallery-header h2{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:500;
+    font-size:clamp(1.8rem,3.5vw,2.6rem);
+    color:var(--cream);
+  }
+  .gallery-header p{
+    font-size:0.82rem;
+    color:rgba(248,246,241,0.5);
+    margin-top:0.5rem;
+    letter-spacing:0.03em;
+  }
+  .status{
+    text-align:center;
+    padding:4rem 0;
+    font-size:0.9rem;
+    color:rgba(248,246,241,0.5);
+    letter-spacing:0.05em;
+  }
+  .status.error{ color:#e08a8a; }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px,1fr));
+    gap:14px;
+  }
+  .tile{
+    position:relative;
+    aspect-ratio:4/5;
+    overflow:hidden;
+    background:var(--navy);
+    cursor:pointer;
+    opacity:0;
+    animation:fadeUp 0.8s ease forwards;
+  }
+  .tile img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    transition:transform 0.6s cubic-bezier(.2,.8,.2,1), filter 0.6s ease;
+    filter:brightness(0.96);
+  }
+  .tile:hover img{
+    transform:scale(1.05);
+    filter:brightness(1.02);
+  }
+  .tile::after{
+    content:'';
+    position:absolute; inset:0;
+    box-shadow:inset 0 0 0 1px rgba(201,162,39,0);
+    transition:box-shadow 0.4s ease;
+    pointer-events:none;
+  }
+  .tile:hover::after{
+    box-shadow:inset 0 0 0 1px rgba(201,162,39,0.5);
+  }
+
+  /* ---------- LIGHTBOX ---------- */
+  .lightbox{
+    position:fixed; inset:0;
+    background:rgba(4,10,20,0.96);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:4vh 4vw;
+  }
+  .lightbox.open{ display:flex; }
+  .lightbox img{
+    max-width:100%;
+    max-height:82vh;
+    object-fit:contain;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  }
+  .lb-close, .lb-prev, .lb-next, .lb-download{
+    position:absolute;
+    background:none;
+    border:1px solid rgba(248,246,241,0.25);
+    color:var(--cream);
+    font-family:'Poppins',sans-serif;
+    font-size:0.9rem;
+    cursor:pointer;
+    padding:0.6rem 0.9rem;
+    transition:border-color 0.25s ease, color 0.25s ease;
+  }
+  .lb-close:hover, .lb-prev:hover, .lb-next:hover, .lb-download:hover{
+    border-color:var(--gold);
+    color:var(--gold);
+  }
+  .lb-close{ top:3vh; right:3vw; }
+  .lb-download{ bottom:3vh; right:3vw; }
+  .lb-prev{ left:3vw; top:50%; transform:translateY(-50%); }
+  .lb-next{ right:3vw; top:50%; transform:translateY(-50%); }
+  .lb-counter{
+    position:absolute;
+    bottom:3vh; left:3vw;
+    font-size:0.75rem;
+    letter-spacing:0.1em;
+    color:rgba(248,246,241,0.55);
+  }
+  @media (max-width:640px){
+    .lb-prev, .lb-next{ padding:0.5rem 0.7rem; }
+  }
+
+  footer{
+    text-align:center;
+    padding:4rem 5vw 5rem;
+    font-size:0.72rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:rgba(248,246,241,0.35);
+  }
+  footer .brand{
+    color:var(--gold-soft);
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:1rem;
+    text-transform:none;
+    letter-spacing:0.02em;
+    display:block;
+    margin-bottom:0.5rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SHUTTER STORIES — CLIENT GALLERY TEMPLATE
+     ============================================================
+     HOW TO USE FOR A NEW CLIENT:
+     1. Find/replace these placeholders throughout this file:
+          [[CLIENT_NAMES]]   e.g.  Divya <em>&</em> Rohit
+          [[OCCASION]]       e.g.  The Wedding / The Haldi / The Reception
+          [[DATE_LOCATION]]  e.g.  20 September 2026 · Mangalore
+          [[FOLDER_ID]]      the client's Google Drive folder ID (in script below)
+     2. API_KEY stays the same for every client — do not change it.
+     3. Make sure the Drive folder is shared as "Anyone with the link can view".
+     4. Save as index.html and deploy to Netlify (new site, or a new
+        subpath/subdomain under your existing gallery site).
+     ============================================================ -->
+
+<section class="hero">
+  <div class="eyebrow">A Gallery By Shutter Stories</div>
+  <h1 class="names">Apeksha <em>&</em> Satya</h1>
+  <div class="thread"></div>
+  <div class="occasion">The Wedding</div>
+  <div class="date-loc">Mangalore</div>
+  <div class="scroll-cue">Scroll to view</div>
+</section>
+
+<section class="gallery-section" id="gallery-section">
+  <div class="gallery-header">
+    <h2>The Collection</h2>
+    <p id="photo-count"></p>
+  </div>
+  <div id="status" class="status">Loading photos…</div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<footer>
+  <span class="brand">Shutter Stories</span>
+  Wedding &amp; Event Photography · Mangalore
+</footer>
+
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" id="lb-close">Close ✕</button>
+  <button class="lb-prev" id="lb-prev">‹</button>
+  <img id="lb-img" src="" alt="">
+  <button class="lb-next" id="lb-next">›</button>
+  <a class="lb-download" id="lb-download" href="" download>Download</a>
+  <div class="lb-counter" id="lb-counter"></div>
+</div>
+
+<script>
+  // ====== CONFIG — update per client ======
+  const FOLDER_ID = '1qsKisSmawpszg40rQdeq_nwsRPQUtSsP';              // ← client's Drive folder ID
+  const API_KEY   = 'AIzaSyBxjfsHdcWlhD0gTBEddME5IQ0Uz9_XiIQ';        // ← same for every client, do not change
+  // ==========================================
+
+  const gridEl = document.getElementById('grid');
+  const statusEl = document.getElementById('status');
+  const countEl = document.getElementById('photo-count');
+
+  let photos = [];
+  let currentIndex = 0;
+
+  function driveImageUrl(fileId){
+    return `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${API_KEY}`;
+  }
+
+  async function loadPhotos(){
+    try{
+      const q = encodeURIComponent(`'${FOLDER_ID}' in parents and mimeType contains 'image/' and trashed = false`);
+      const fields = encodeURIComponent('files(id,name)');
+      const url = `https://www.googleapis.com/drive/v3/files?q=${q}&key=${API_KEY}&fields=${fields}&pageSize=1000&orderBy=name`;
+
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if(data.error){
+        throw new Error(data.error.message || 'Drive API error');
+      }
+
+      photos = data.files || [];
+
+      if(photos.length === 0){
+        statusEl.textContent = 'No photos found in this gallery yet.';
+        return;
+      }
+
+      statusEl.style.display = 'none';
+      countEl.textContent = `${photos.length} photograph${photos.length === 1 ? '' : 's'}`;
+      renderGrid();
+
+    }catch(err){
+      statusEl.textContent = 'Could not load photos. Please check back shortly.';
+      statusEl.classList.add('error');
+      console.error(err);
+    }
+  }
+
+  function renderGrid(){
+    gridEl.innerHTML = '';
+    photos.forEach((photo, i) => {
+      const tile = document.createElement('div');
+      tile.className = 'tile';
+      tile.style.animationDelay = `${Math.min(i * 0.04, 1)}s`;
+
+      const img = document.createElement('img');
+      img.loading = 'lazy';
+      img.src = driveImageUrl(photo.id);
+      img.alt = photo.name;
+
+      tile.appendChild(img);
+      tile.addEventListener('click', () => openLightbox(i));
+      gridEl.appendChild(tile);
+    });
+  }
+
+  // ---------- Lightbox ----------
+  const lightbox = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lb-img');
+  const lbClose = document.getElementById('lb-close');
+  const lbPrev = document.getElementById('lb-prev');
+  const lbNext = document.getElementById('lb-next');
+  const lbDownload = document.getElementById('lb-download');
+  const lbCounter = document.getElementById('lb-counter');
+
+  function openLightbox(index){
+    currentIndex = index;
+    updateLightbox();
+    lightbox.classList.add('open');
+  }
+
+  function updateLightbox(){
+    const photo = photos[currentIndex];
+    const url = driveImageUrl(photo.id);
+    lbImg.src = url;
+    lbImg.alt = photo.name;
+    lbDownload.href = url;
+    lbDownload.setAttribute('download', photo.name);
+    lbCounter.textContent = `${currentIndex + 1} / ${photos.length}`;
+  }
+
+  function closeLightbox(){
+    lightbox.classList.remove('open');
+  }
+
+  lbClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => {
+    if(e.target === lightbox) closeLightbox();
+  });
+  lbPrev.addEventListener('click', () => {
+    currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+    updateLightbox();
+  });
+  lbNext.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % photos.length;
+    updateLightbox();
+  });
+  document.addEventListener('keydown', (e) => {
+    if(!lightbox.classList.contains('open')) return;
+    if(e.key === 'Escape') closeLightbox();
+    if(e.key === 'ArrowLeft') lbPrev.click();
+    if(e.key === 'ArrowRight') lbNext.click();
+  });
+
+  loadPhotos();
+</script>
+
+</body>
+</html>
